@@ -1,0 +1,12 @@
+# Ultra minimal for testing core API functionality
+fastapi
+uvicorn[standard]
+websockets
+pydantic>=2.0
+pydantic-settings
+python-dotenv
+python-multipart
+httpx
+langchain
+langchain-community
+langchain-core

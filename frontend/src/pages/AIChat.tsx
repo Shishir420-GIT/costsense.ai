@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Send, 
+import {
+  Send,
   Bot,
   User,
   DollarSign,
@@ -19,6 +19,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id: string;
@@ -54,7 +56,7 @@ const AIChat: React.FC = () => {
     {
       id: '1',
       role: 'assistant',
-      content: 'Hi! I\'m your AWS Component Advisor. Describe your application requirements and I\'ll recommend the best AWS components with pricing and top solutions.',
+      content: 'Hi! I\'m your Azure Cost Optimization AI Assistant. I can help you analyze costs, identify savings opportunities, optimize infrastructure, and provide recommendations for your Azure resources. What would you like to know?',
       timestamp: new Date()
     }
   ]);
@@ -110,32 +112,31 @@ const AIChat: React.FC = () => {
         return;
       }
 
-      // Make API call to component recommendation agent for technical queries
-      const response = await fetch('/api/v1/agents/component-advisor', {
+      // Make API call to Azure analyze endpoint for technical queries
+      const response = await fetch('http://localhost:8000/api/v1/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: userMessage.content,
-          context: 'component_recommendation'
+          query: userMessage.content
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get recommendation');
+        throw new Error('Failed to get analysis');
       }
 
       const data = await response.json();
-      
-      // Parse the response to extract recommendations and solutions
+
+      // Parse the response to extract analysis
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: data.response || 'I\'ve analyzed your requirements and prepared recommendations below.',
+        content: data.analysis || 'I\'ve analyzed your requirements.',
         timestamp: new Date(),
-        recommendations: data.recommendations || [],
-        solutions: data.solutions || []
+        recommendations: [],
+        solutions: []
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -244,10 +245,10 @@ const AIChat: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-2">
-            AI Chat Assistant
+            Azure AI Chat Assistant
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-400">
-            Get AI-powered AWS component recommendations with pricing and architecture solutions
+            Get AI-powered Azure cost analysis, optimization recommendations, and infrastructure insights
           </p>
         </div>
 
@@ -258,7 +259,7 @@ const AIChat: React.FC = () => {
               <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                 <div className="flex items-center gap-2">
                   <Bot className="h-5 w-5" />
-                  <CardTitle className="text-lg">AWS Component Advisor</CardTitle>
+                  <CardTitle className="text-lg">Azure Cost AI Advisor</CardTitle>
                 </div>
               </CardHeader>
               
@@ -275,12 +276,20 @@ const AIChat: React.FC = () => {
                           )}
                           <div className={`max-w-[80%] ${message.role === 'user' ? 'order-1' : ''}`}>
                             <div className={`rounded-lg p-4 text-sm ${
-                              message.role === 'user' 
-                                ? 'bg-blue-500 text-white ml-auto' 
+                              message.role === 'user'
+                                ? 'bg-blue-500 text-white ml-auto'
                                 : 'bg-gray-100 text-gray-800'
                             }`}>
                               <div className="flex items-start justify-between gap-2">
-                                <p className="leading-relaxed">{message.content}</p>
+                                {message.role === 'user' ? (
+                                  <p className="leading-relaxed">{message.content}</p>
+                                ) : (
+                                  <div className="prose prose-sm max-w-none prose-headings:font-semibold prose-h1:text-lg prose-h2:text-base prose-h3:text-sm prose-p:leading-relaxed prose-strong:font-semibold prose-ul:my-2 prose-ol:my-2 prose-li:my-1">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                      {message.content}
+                                    </ReactMarkdown>
+                                  </div>
+                                )}
                                 {message.role === 'assistant' && (
                                   <Button
                                     variant="ghost"
@@ -455,47 +464,47 @@ const AIChat: React.FC = () => {
                 <CardTitle className="text-base">Quick Questions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start text-left h-auto p-3" 
-                  onClick={() => handleQuickQuestion("I need a scalable web application with user authentication, file uploads, and a PostgreSQL database")}
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left h-auto p-3"
+                  onClick={() => handleQuickQuestion("Analyze my Azure costs for the last month")}
                 >
                   <div>
-                    <div className="font-medium">Web Application</div>
-                    <div className="text-xs text-muted-foreground">Full-stack web app with database</div>
+                    <div className="font-medium">Cost Analysis</div>
+                    <div className="text-xs text-muted-foreground">Monthly spending breakdown</div>
                   </div>
                 </Button>
-                
-                <Button 
-                  variant="outline" 
+
+                <Button
+                  variant="outline"
                   className="w-full justify-start text-left h-auto p-3"
-                  onClick={() => handleQuickQuestion("I need a RESTful API service with authentication and rate limiting")}
+                  onClick={() => handleQuickQuestion("What are my top cost-saving opportunities?")}
                 >
                   <div>
-                    <div className="font-medium">API Service</div>
-                    <div className="text-xs text-muted-foreground">RESTful API with authentication</div>
+                    <div className="font-medium">Savings Opportunities</div>
+                    <div className="text-xs text-muted-foreground">Find cost reduction options</div>
                   </div>
                 </Button>
-                
-                <Button 
-                  variant="outline" 
+
+                <Button
+                  variant="outline"
                   className="w-full justify-start text-left h-auto p-3"
-                  onClick={() => handleQuickQuestion("I need a big data processing pipeline for analytics and reporting")}
+                  onClick={() => handleQuickQuestion("Show me underutilized VMs")}
                 >
                   <div>
-                    <div className="font-medium">Data Analytics</div>
-                    <div className="text-xs text-muted-foreground">Big data processing pipeline</div>
+                    <div className="font-medium">VM Optimization</div>
+                    <div className="text-xs text-muted-foreground">Right-size virtual machines</div>
                   </div>
                 </Button>
-                
-                <Button 
-                  variant="outline" 
+
+                <Button
+                  variant="outline"
                   className="w-full justify-start text-left h-auto p-3"
-                  onClick={() => handleQuickQuestion("I need a serverless mobile app backend with push notifications")}
+                  onClick={() => handleQuickQuestion("Recommend storage tier optimizations")}
                 >
                   <div>
-                    <div className="font-medium">Mobile Backend</div>
-                    <div className="text-xs text-muted-foreground">Serverless mobile app backend</div>
+                    <div className="font-medium">Storage Optimization</div>
+                    <div className="text-xs text-muted-foreground">Optimize storage costs</div>
                   </div>
                 </Button>
               </CardContent>
@@ -528,7 +537,7 @@ const AIChat: React.FC = () => {
             <Alert>
               <Database className="h-4 w-4" />
               <AlertDescription>
-                Powered by AWS Component Advisor AI - providing intelligent recommendations based on your specific requirements and AWS best practices.
+                Powered by Azure Cost Optimization AI - providing intelligent analysis and recommendations based on your Azure infrastructure and usage patterns.
               </AlertDescription>
             </Alert>
           </div>

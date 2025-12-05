@@ -83,11 +83,18 @@ export const costApi = {
 
     // Transform to match frontend CostSummary type
     return {
-      total_cost: data.total_monthly_cost || 0,
+      totalCost: data.total_monthly_cost || 0,
+      currency: 'USD',
       period: timePeriod,
-      daily_costs: data.daily_costs || [],
-      top_services: data.top_services || [],
-      analysis_date: new Date().toISOString()
+      breakdown: data.top_services?.map(([name, cost]: [string, number]) => ({
+        service: name,
+        cost: cost,
+        percentage: (cost / data.total_monthly_cost) * 100
+      })) || [],
+      trend: data.monthly_change_percent > 0 ? 'up' : 'down',
+      changePercent: data.monthly_change_percent || 0,
+      dailyCosts: data.daily_costs || [],
+      resourceGroups: data.resource_groups || []
     };
   },
 
@@ -114,33 +121,13 @@ export const costApi = {
       api.get('/api/v1/infrastructure/storage')
     ]);
 
-    const vmData = vmResponse.data;
-    const storageData = storageResponse.data;
-
-    // Transform Azure VM/Storage data to EC2/S3 format expected by frontend
     return {
-      ec2_analysis: {
-        total_instances: vmData.totalInstances || 0,
-        instances: (vmData.instances || []).map((vm: any) => ({
-          instance_id: vm.name || vm.id,
-          instance_type: vm.size || 'Unknown',
-          avg_cpu_utilization: vm.cpuUtilization || 0,
-          recommendation: vm.recommendation || 'No recommendation'
-        })),
-        underutilized_count: (vmData.instances || []).filter((vm: any) =>
-          vm.cpuUtilization < 30 || vm.recommendation !== 'Optimal sizing'
-        ).length,
-        potential_monthly_savings: vmData.potentialSavings || 0
-      },
-      s3_analysis: {
-        total_buckets_analyzed: storageData.totalAccounts || 0,
-        total_size_gb: storageData.totalSizeGB || 0,
-        buckets: (storageData.accounts || []).map((account: any) => ({
-          bucket_name: account.name || account.accountName,
-          size_gb: account.sizeGB || 0,
-          recommendations: account.recommendations || []
-        }))
-      }
+      virtualMachines: vmResponse.data,
+      storage: storageResponse.data,
+      totalResources: vmResponse.data.totalInstances + storageResponse.data.totalAccounts,
+      underutilized: vmResponse.data.instances?.filter((vm: any) =>
+        vm.cpuUtilization < 30 || vm.recommendation !== 'Optimal sizing'
+      ).length || 0
     };
   },
 
