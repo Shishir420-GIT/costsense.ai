@@ -235,7 +235,7 @@ const AzureDemo: React.FC = () => {
                     <div key={index} className="border-l-4 border-l-orange-500 pl-3 py-2">
                       <p className="text-sm font-medium">{rec.title}</p>
                       <p className="text-xs text-slate-600">
-                        Potential savings: ${rec.savings}/month
+                        Potential savings: ${rec.savingsMonthly || rec.savings || 0}/month
                       </p>
                     </div>
                   ))}

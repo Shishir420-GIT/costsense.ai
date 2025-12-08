@@ -6,8 +6,12 @@ import logging
 
 from src.mock.azure_data_generator import azure_data_generator
 from src.config.langchain_config import get_ollama_llm
+from src.config.settings import Settings
+from src.config.database import SessionLocal
+from src.repositories import DashboardRepository
 
 logger = logging.getLogger(__name__)
+settings = Settings()
 
 
 class CostAnalystAgent:
@@ -45,14 +49,34 @@ class CostAnalystAgent:
         try:
             # Fetch cost data if not provided
             if cost_data is None:
-                dashboard_data = azure_data_generator.generate_dashboard_data()
-                cost_data = {
-                    "total_monthly_cost": dashboard_data["total_monthly_cost"],
-                    "monthly_change_percent": dashboard_data["monthly_change_percent"],
-                    "daily_costs": dashboard_data["daily_costs"][-7:],  # Last 7 days
-                    "top_services": dashboard_data["top_services"],
-                    "cost_trend": "increasing" if dashboard_data["monthly_change_percent"] > 0 else "decreasing"
-                }
+                if settings.USE_DATABASE:
+                    # Get data from database
+                    db = SessionLocal()
+                    try:
+                        dashboard_repo = DashboardRepository(db)
+                        dashboard_data = dashboard_repo.get_dashboard_summary()
+
+                        cost_data = {
+                            "total_monthly_cost": dashboard_data["total_monthly_cost"],
+                            "monthly_change_percent": dashboard_data["monthly_change_percent"],
+                            "daily_costs": dashboard_data["daily_costs"][-7:],  # Last 7 days
+                            "top_services": dashboard_data["top_services"],
+                            "cost_trend": "increasing" if dashboard_data["monthly_change_percent"] > 0 else "decreasing"
+                        }
+                        logger.info("Cost Analyst using database data")
+                    finally:
+                        db.close()
+                else:
+                    # Fallback to mock data
+                    dashboard_data = azure_data_generator.generate_dashboard_data()
+                    cost_data = {
+                        "total_monthly_cost": dashboard_data["total_monthly_cost"],
+                        "monthly_change_percent": dashboard_data["monthly_change_percent"],
+                        "daily_costs": dashboard_data["daily_costs"][-7:],  # Last 7 days
+                        "top_services": dashboard_data["top_services"],
+                        "cost_trend": "increasing" if dashboard_data["monthly_change_percent"] > 0 else "decreasing"
+                    }
+                    logger.info("Cost Analyst using mock data")
 
             # Try LLM first, fall back if unavailable
             if self.llm:
@@ -75,7 +99,11 @@ class CostAnalystAgent:
         top_services = cost_data.get("top_services", [])
 
         # Prepare context for LLM
-        services_text = "\n".join([f"- {service}: ${cost:,.2f}" for service, cost in top_services[:5]])
+        # Handle both dict and tuple formats for top_services
+        if top_services and isinstance(top_services[0], dict):
+            services_text = "\n".join([f"- {item['service']}: ${item['cost']:,.2f}" for item in top_services[:5]])
+        else:
+            services_text = "\n".join([f"- {service}: ${cost:,.2f}" for service, cost in top_services[:5]])
 
         prompt = f"""You are an Azure Cost Analyst AI. Analyze the following Azure cost data and answer the user's question.
 
@@ -115,7 +143,15 @@ Keep the response concise but informative, using markdown formatting."""
 
 **Top Spending Services**:
 """
-        for service, cost in top_services[:3]:
+        # Handle both dict and tuple formats for top_services
+        for item in top_services[:3]:
+            if isinstance(item, dict):
+                service = item.get("service", "Unknown")
+                cost = float(item.get("cost", 0))
+            else:
+                service, cost = item
+                cost = float(cost)
+
             percentage = (cost / total_cost * 100) if total_cost > 0 else 0
             analysis += f"- {service}: ${cost:,.2f} ({percentage:.1f}% of total)\n"
 

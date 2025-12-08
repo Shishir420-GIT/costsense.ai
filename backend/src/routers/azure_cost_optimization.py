@@ -1,13 +1,26 @@
 """Azure Cost Optimization API Router"""
 
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, Depends
 from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 import logging
+from sqlalchemy.orm import Session
 
 from src.agents_langchain import azure_orchestrator
+from src.agents_langchain.agentic_orchestrator import agentic_orchestrator
 from src.mock.azure_data_generator import azure_data_generator
+from src.config.settings import Settings
+from src.config.database import get_db
+from src.repositories import (
+    DashboardRepository,
+    VMRepository,
+    StorageRepository,
+    OptimizationRepository
+)
+
+# Initialize settings
+settings = Settings()
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -49,10 +62,19 @@ class AnalysisResponse(BaseModel):
 
 # Dashboard Endpoints
 @router.get("/dashboard/summary")
-async def get_dashboard_summary():
-    """Get comprehensive dashboard data"""
+async def get_dashboard_summary(db: Session = Depends(get_db)):
+    """Get comprehensive dashboard data (Database-backed with caching)"""
     try:
-        data = azure_data_generator.generate_dashboard_data()
+        if settings.USE_DATABASE:
+            # Use database with Redis caching
+            dashboard_repo = DashboardRepository(db)
+            data = dashboard_repo.get_dashboard_summary()
+            logger.info("Dashboard summary served from database")
+        else:
+            # Fallback to mock data generator
+            data = azure_data_generator.generate_dashboard_data()
+            logger.info("Dashboard summary served from mock generator")
+
         return data
     except Exception as e:
         logger.error(f"Dashboard summary failed: {e}")
@@ -84,15 +106,16 @@ async def get_cost_data(period: str = "30d"):
 # Analysis Endpoints
 @router.post("/analyze", response_model=AnalysisResponse)
 async def analyze_costs(request: CostAnalysisRequest):
-    """Perform AI-powered cost analysis"""
+    """Perform AI-powered cost analysis (Fully Agentic with Tool Calling)"""
     try:
-        result = await azure_orchestrator.analyze(request.query)
+        # Use fully agentic orchestrator with database tool calling
+        result = await agentic_orchestrator.analyze(request.query)
 
         return AnalysisResponse(
             analysis=result,
             timestamp=datetime.utcnow().isoformat(),
             confidence="High",
-            agent_used="orchestrator"
+            agent_used="agentic_orchestrator"
         )
     except Exception as e:
         logger.error(f"Cost analysis failed: {e}")
@@ -101,15 +124,16 @@ async def analyze_costs(request: CostAnalysisRequest):
 
 @router.post("/optimize", response_model=AnalysisResponse)
 async def get_optimization_recommendations(request: OptimizationRequest):
-    """Get AI-powered optimization recommendations"""
+    """Get AI-powered optimization recommendations (Fully Agentic with Tool Calling)"""
     try:
-        result = await azure_orchestrator.analyze(request.query)
+        # Use fully agentic orchestrator with database tool calling
+        result = await agentic_orchestrator.analyze(request.query)
 
         return AnalysisResponse(
             analysis=result,
             timestamp=datetime.utcnow().isoformat(),
             confidence="High",
-            agent_used="orchestrator"
+            agent_used="agentic_orchestrator"
         )
     except Exception as e:
         logger.error(f"Optimization analysis failed: {e}")
@@ -134,22 +158,50 @@ async def parallel_analysis(request: CostAnalysisRequest):
 
 # Infrastructure Endpoints
 @router.get("/infrastructure/vms")
-async def get_vm_analysis():
-    """Get VM utilization analysis"""
+async def get_vm_analysis(db: Session = Depends(get_db)):
+    """Get VM utilization analysis (Database-backed)"""
     try:
-        vm_data = azure_data_generator.vm_gen.generate()
-        return vm_data
+        if settings.USE_DATABASE:
+            # Use database with Redis caching
+            vm_repo = VMRepository(db)
+            vms = vm_repo.get_all_vms()
+            summary = vm_repo.get_vms_summary()
+
+            return {
+                "vms": vms,
+                "summary": summary,
+                "totalMonthlyCost": summary["totalMonthlyCost"],
+                "potentialSavings": summary["potentialSavings"]
+            }
+        else:
+            # Fallback to mock data generator
+            vm_data = azure_data_generator.vm_gen.generate()
+            return vm_data
     except Exception as e:
         logger.error(f"VM analysis failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/infrastructure/storage")
-async def get_storage_analysis():
-    """Get storage account analysis"""
+async def get_storage_analysis(db: Session = Depends(get_db)):
+    """Get storage account analysis (Database-backed)"""
     try:
-        storage_data = azure_data_generator.storage_gen.generate()
-        return storage_data
+        if settings.USE_DATABASE:
+            # Use database with Redis caching
+            storage_repo = StorageRepository(db)
+            accounts = storage_repo.get_all_storage_accounts()
+            summary = storage_repo.get_storage_summary()
+
+            return {
+                "storage_accounts": accounts,
+                "summary": summary,
+                "totalMonthlyCost": summary["totalMonthlyCost"],
+                "potentialSavings": summary["potentialSavings"]
+            }
+        else:
+            # Fallback to mock data generator
+            storage_data = azure_data_generator.storage_gen.generate()
+            return storage_data
     except Exception as e:
         logger.error(f"Storage analysis failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -176,19 +228,33 @@ async def get_comprehensive_infrastructure():
 
 # Recommendations Endpoint
 @router.get("/recommendations")
-async def get_all_recommendations():
-    """Get all optimization recommendations"""
+async def get_all_recommendations(db: Session = Depends(get_db)):
+    """Get all optimization recommendations (Database-backed)"""
     try:
-        from src.agents_langchain.remediation_specialist import remediation_specialist
+        if settings.USE_DATABASE:
+            # Use database with Redis caching
+            opt_repo = OptimizationRepository(db)
+            recommendations = opt_repo.get_all_recommendations(status="pending")
+            summary = opt_repo.get_optimization_summary()
 
-        recommendations = remediation_specialist._generate_recommendations()
+            return {
+                "recommendations": recommendations,
+                "total_potential_savings": summary["totalMonthlySavings"],
+                "count": summary["totalCount"],
+                "summary": summary,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        else:
+            # Fallback to mock data generator
+            from src.agents_langchain.remediation_specialist import remediation_specialist
+            recommendations = remediation_specialist._generate_recommendations()
 
-        return {
-            "recommendations": recommendations,
-            "total_potential_savings": sum(r["savings"] for r in recommendations),
-            "count": len(recommendations),
-            "timestamp": datetime.utcnow().isoformat()
-        }
+            return {
+                "recommendations": recommendations,
+                "total_potential_savings": sum(r["savings"] for r in recommendations),
+                "count": len(recommendations),
+                "timestamp": datetime.utcnow().isoformat()
+            }
     except Exception as e:
         logger.error(f"Recommendations retrieval failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))

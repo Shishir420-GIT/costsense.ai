@@ -13,10 +13,15 @@ interface Recommendation {
   description: string;
   category: string;
   priority: string;
-  savings: number;
+  savingsMonthly: number;
+  savingsAnnual: number;
   impact: string;
   effort: string;
-  implementation_steps: string[];
+  implementationSteps: string[];
+  estimatedTimeMinutes?: number;
+  resourceType?: string;
+  resourceName?: string;
+  status?: string;
 }
 
 const Optimization: React.FC = () => {
@@ -135,7 +140,7 @@ const Optimization: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-blue-100">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-yellow-50 to-yellow-100">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -145,14 +150,14 @@ const Optimization: React.FC = () => {
                   </p>
                   <Badge variant="secondary" className="mt-2">Ready to Apply</Badge>
                 </div>
-                <div className="rounded-full bg-blue-500 p-3">
-                  <Zap className="h-6 w-6 text-white" />
+                <div className="rounded-full bg-ey-yellow p-3">
+                  <Zap className="h-6 w-6 text-ey-black" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-purple-100">
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-gray-50 to-gray-100">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -221,10 +226,10 @@ const Optimization: React.FC = () => {
                       <div className="bg-green-50 rounded-lg p-3">
                         <p className="text-xs text-slate-600 mb-1">Monthly Savings</p>
                         <p className="text-xl font-bold text-green-600">
-                          ${rec.savings.toLocaleString()}
+                          ${rec.savingsMonthly?.toLocaleString() || '0'}
                         </p>
                       </div>
-                      <div className="bg-blue-50 rounded-lg p-3">
+                      <div className="bg-yellow-50 rounded-lg p-3">
                         <p className="text-xs text-slate-600 mb-1">Impact</p>
                         <p className={`text-lg font-semibold ${getImpactColor(rec.impact)}`}>
                           {rec.impact || 'N/A'}
@@ -245,26 +250,35 @@ const Optimization: React.FC = () => {
                     </div>
 
                     {/* Implementation Steps */}
-                    {rec.implementation_steps && rec.implementation_steps.length > 0 && (
-                      <>
-                        <Separator />
-                        <div>
-                          <h4 className="text-sm font-semibold text-slate-900 mb-2">
-                            Implementation Steps:
-                          </h4>
-                          <ol className="space-y-2">
-                            {rec.implementation_steps.map((step, stepIndex) => (
-                              <li key={stepIndex} className="flex items-start gap-2 text-sm text-slate-700">
-                                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold">
-                                  {stepIndex + 1}
-                                </span>
-                                <span>{step}</span>
-                              </li>
-                            ))}
-                          </ol>
-                        </div>
-                      </>
-                    )}
+                    {rec.implementationSteps && (() => {
+                      try {
+                        const steps = typeof rec.implementationSteps === 'string'
+                          ? JSON.parse(rec.implementationSteps)
+                          : rec.implementationSteps;
+                        return steps && steps.length > 0 && (
+                          <>
+                            <Separator />
+                            <div>
+                              <h4 className="text-sm font-semibold text-slate-900 mb-2">
+                                Implementation Steps:
+                              </h4>
+                              <ol className="space-y-2">
+                                {steps.map((step: string, stepIndex: number) => (
+                                  <li key={stepIndex} className="flex items-start gap-2 text-sm text-slate-700">
+                                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold">
+                                      {stepIndex + 1}
+                                    </span>
+                                    <span>{step}</span>
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          </>
+                        );
+                      } catch (e) {
+                        return null;
+                      }
+                    })()}
 
                     {/* Action Buttons */}
                     <div className="flex gap-2 pt-2">

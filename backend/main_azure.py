@@ -15,7 +15,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Import routers
-from src.routers import azure_cost_optimization, azure_websocket
+from src.routers import azure_cost_optimization, azure_websocket, infra_planner_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -76,6 +76,11 @@ app.include_router(
     azure_websocket.router,
     prefix="/ws",
     tags=["websocket"]
+)
+
+app.include_router(
+    infra_planner_router.router,
+    tags=["infrastructure-planner"]
 )
 
 # Health check endpoint

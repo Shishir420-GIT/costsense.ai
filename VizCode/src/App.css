@@ -1,0 +1,262 @@
+body, #root {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.icon-library {
+  width: 15%;
+  background: #f5f7fa;
+  border-right: 1px solid #e0e0e0;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.prompt-editor {
+  width: 25%;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt-input {
+  width: 100%;
+  height: 60vh;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  padding: 0.75rem;
+  resize: vertical;
+}
+
+.diagram-canvas {
+  flex: 1;
+  background: #f0f4ff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* New responsive layout helpers */
+.main-content { display: flex; flex: 1; min-height: 0; gap: 12px; }
+.svg-wrapper { width: 100%; overflow: auto; }
+
+/* Ensure buttons / controls are touch-friendly and spaced */
+button, .btn-primary, .btn-neutral { min-height: 40px; padding: 10px 12px; }
+
+/* Responsive breakpoints */
+@media (max-width: 1100px) {
+  .icon-library { width: 20%; padding: 0.75rem; }
+  .prompt-editor { width: 30%; padding: 0.75rem; }
+}
+
+@media (max-width: 900px) {
+  /* stack columns vertically on small screens */
+  .main-content { flex-direction: column; }
+  .icon-library { width: 100%; order: 0; display: block; }
+  .prompt-editor { width: 100%; order: 1; }
+  .diagram-canvas { width: 100%; order: 2; }
+  .icon-library, .prompt-editor, .diagram-canvas { padding: 0.75rem; }
+  .control-row { flex-wrap: wrap; }
+  .control-row > * { margin-bottom: 8px; }
+}
+
+@media (max-width: 480px) {
+  /* extra small devices: larger touch targets */
+  .icon-library { padding: 0.5rem; }
+  .prompt-editor { padding: 0.5rem; }
+  .diagram-canvas { padding: 0.5rem; }
+  .btn-primary, .btn-neutral { width: 100%; box-sizing: border-box; }
+  .control-row { padding: 8px; gap: 6px; }
+  .cluster-input { width: 100% !important; }
+}
+
+.canvas-placeholder {
+  flex: 1;
+  background: #fff;
+  border: 2px dashed #b0b8d1;
+  border-radius: 12px;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b0b8d1;
+  font-size: 1.2rem;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Control rows and button styles (tool theme) */
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #f3f4f6; /* light grey */
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap; /* allow children to wrap to next line instead of overflowing */
+}
+.control-row label { color: #374151; font-weight: 600; font-size: 14px; line-height: 1; }
+.control-row input[type="text"], .control-row select {
+  padding: 6px 8px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; color: #071026;
+}
+.hidden-file-input { display: none; }
+
+/* Hide scrollbars for a cleaner UI across browsers */
+*::-webkit-scrollbar { width: 0 !important; height: 0 !important; }
+html, body { -ms-overflow-style: none; scrollbar-width: none; }
+
+.cluster-input { font-size: 14px; padding: 6px 8px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; color: #071026; }
+
+/* Import Excel aligns with Add Cluster control and wraps below when space is limited */
+.import-excel-group {
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap; /* allow buttons to wrap to next line when space is constrained */
+}
+.import-excel-group label { color: inherit; font-weight: inherit; font-size: inherit; line-height: inherit; }
+
+/* Template download anchor styled like the Choose File label and will wrap on small widths */
+.import-excel-group a.btn-help-small {
+  text-decoration: none;
+  min-width: 64px; /* slightly smaller to better fit when zoomed */
+  box-sizing: border-box;
+  flex: 0 0 auto; /* don't stretch; wrap instead */
+}
+.import-excel-group > * { margin-bottom: 6px; }
+
+@media (max-width: 900px) {
+  /* ensure import group moves below Add Cluster on small screens */
+  .control-row { flex-wrap: wrap; }
+  .import-excel-group { width: 100%; margin-left: 0; order: 2; }
+}
+
+/* Small variant for primary buttons used in compact controls */
+.btn-primary.small {
+  padding: 4px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+/* Primary action button (matches Help button look) */
+.btn-primary {
+  background: linear-gradient(90deg,#ffb86b,#ffa726);
+  color: #071026;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn-primary:active { transform: translateY(1px); }
+
+.btn-neutral {
+  background: #ffffff; border: 1px solid #d1d5db; color: #071026; padding: 6px 10px; border-radius: 8px; cursor: pointer;
+}
+
+
+/* Control rows and button styles */
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #f3f4f6; /* light grey */
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.control-row label { color: #374151; font-weight: 600; }
+.control-row input[type="text"], .control-row select {
+  padding: 6px 8px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; color: #071026;
+}
+
+/* Primary action button (matches Help button look)
+   Gradient, prominent, dark label */
+.btn-primary {
+  background: linear-gradient(90deg,#ffb86b,#ffa726);
+  color: #071026;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn-primary:active { transform: translateY(1px); }
+
+/* Neutral small buttons */
+.btn-neutral {
+  background: #ffffff; border: 1px solid #d1d5db; color: #071026; padding: 6px 10px; border-radius: 8px; cursor: pointer;
+}
+
+/* Hide native file input appearance; we'll use a label as a styled button */
+.hidden-file-input { display: none; }
+
+/* Compact Help-style button: same visual as Help but smaller and centered text */
+.btn-help-small {
+  background: linear-gradient(90deg,#ffb86b,#ffa726);
+  color: #071026;
+  border: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 88px;
+  box-sizing: border-box;
+}
+.btn-help-small:active { transform: translateY(1px); }

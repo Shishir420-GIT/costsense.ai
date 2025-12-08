@@ -59,7 +59,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
     {
       id: '1',
       role: 'assistant',
-      content: 'Hi! I\'m your AWS Component Advisor. Describe your application requirements and I\'ll recommend the best AWS components with pricing and top solutions.',
+      content: 'Hi! I\'m your Azure Component Advisor. Describe your application requirements and I\'ll recommend the best Azure components with pricing and top solutions.',
       timestamp: new Date()
     }
   ]);
@@ -134,7 +134,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: 'I\'ve analyzed your requirements and prepared AWS component recommendations with pricing analysis.',
+        content: 'I\'ve analyzed your requirements and prepared Azure component recommendations with pricing analysis.',
         timestamp: new Date(),
         recommendations: generateMockRecommendations(userMessage.content),
         solutions: generateMockSolutions(userMessage.content)
@@ -189,7 +189,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
 
     if (isApi || isWebApp) {
       recommendations.push({
-        service: 'AWS Lambda',
+        service: 'Azure Functions',
         component: 'Serverless Functions',
         description: 'Event-driven compute service',
         pricing: '$0.20/1M requests',
@@ -216,7 +216,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
     return [
       {
         name: 'Serverless-First Solution',
-        architecture: ['AWS Lambda', 'API Gateway', 'DynamoDB', 'S3', 'CloudFront'],
+        architecture: ['Azure Functions', 'API Management', 'Cosmos DB', 'Blob Storage', 'CDN'],
         total_monthly_cost: 45,
         pros: ['Low operational overhead', 'Auto-scaling', 'Pay-per-use pricing'],
         cons: ['Cold start latency', 'Vendor lock-in'],
@@ -268,7 +268,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Bot className="h-5 w-5" />
-            <CardTitle className="text-sm font-medium">AWS Component Advisor</CardTitle>
+            <CardTitle className="text-sm font-medium">Azure Component Advisor</CardTitle>
           </div>
           <div className="flex items-center gap-1">
             <Button
@@ -343,7 +343,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
                     <div className="bg-white border rounded-lg p-3 space-y-3">
                       <h4 className="font-semibold text-sm flex items-center gap-2">
                         <DollarSign className="h-4 w-4" />
-                        AWS Component Recommendations
+                        Azure Component Recommendations
                       </h4>
                       <Table>
                         <TableHeader>
@@ -462,7 +462,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ isOpen, onToggle }) => {
               </Button>
             </form>
             <p className="text-xs text-gray-500 mt-1">
-              Powered by AWS Component Advisor AI
+              Powered by Azure Component Advisor AI
             </p>
           </div>
         </CardContent>

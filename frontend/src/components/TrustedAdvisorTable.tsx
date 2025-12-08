@@ -146,14 +146,14 @@ const TrustedAdvisorTable: React.FC<TrustedAdvisorTableProps> = ({ className }) 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            AWS Trusted Advisor Analysis
+            Azure Advisor Analysis
           </CardTitle>
           <CardDescription>Loading cost optimization recommendations...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
             <RefreshCw className="h-6 w-6 animate-spin mr-2" />
-            <span>Analyzing AWS resources...</span>
+            <span>Analyzing Azure resources...</span>
           </div>
         </CardContent>
       </Card>
@@ -166,7 +166,7 @@ const TrustedAdvisorTable: React.FC<TrustedAdvisorTableProps> = ({ className }) 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            AWS Trusted Advisor Analysis
+            Azure Advisor Analysis
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -255,10 +255,10 @@ const TrustedAdvisorTable: React.FC<TrustedAdvisorTableProps> = ({ className }) 
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                AWS Trusted Advisor Cost Analysis
+                Azure Advisor Cost Analysis
               </CardTitle>
               <CardDescription>
-                Cost optimization recommendations from AWS Trusted Advisor
+                Cost optimization recommendations from Azure Advisor
               </CardDescription>
             </div>
             <div className="flex gap-2">
@@ -365,7 +365,7 @@ const TrustedAdvisorTable: React.FC<TrustedAdvisorTableProps> = ({ className }) 
           
           <div className="flex items-center justify-between text-sm text-slate-600">
             <div className="flex items-center gap-4">
-              <span>Source: AWS Trusted Advisor</span>
+              <span>Source: Azure Advisor</span>
               <span>•</span>
               <span>Last refresh: {new Date(data.last_updated).toLocaleString()}</span>
             </div>

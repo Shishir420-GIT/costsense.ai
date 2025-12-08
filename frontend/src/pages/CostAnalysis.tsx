@@ -92,7 +92,7 @@ const CostAnalysis: React.FC = () => {
           {/* Chat Interface */}
           <div className="lg:col-span-2">
             <Card className="border-0 shadow-lg h-[600px] flex flex-col">
-              <CardHeader className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+              <CardHeader className="bg-gradient-to-r from-ey-black to-ey-black-light text-ey-yellow">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
                   <CardTitle className="text-lg">Cost Analysis AI</CardTitle>
@@ -108,15 +108,15 @@ const CostAnalysis: React.FC = () => {
                       className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       {message.role === 'assistant' && (
-                        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
-                          <Bot className="h-5 w-5 text-white" />
+                        <div className="w-10 h-10 rounded-full bg-ey-yellow flex items-center justify-center flex-shrink-0">
+                          <Bot className="h-5 w-5 text-ey-black" />
                         </div>
                       )}
                       <div className={`max-w-[80%] ${message.role === 'user' ? 'order-1' : ''}`}>
                         <div
                           className={`rounded-lg p-4 text-sm ${
                             message.role === 'user'
-                              ? 'bg-blue-500 text-white ml-auto'
+                              ? 'bg-ey-yellow text-ey-black ml-auto font-medium'
                               : 'bg-gray-100 text-gray-800'
                           }`}
                         >
@@ -144,12 +144,12 @@ const CostAnalysis: React.FC = () => {
 
                   {loading && (
                     <div className="flex gap-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-                        <Bot className="h-5 w-5 text-white" />
+                      <div className="w-10 h-10 rounded-full bg-ey-yellow flex items-center justify-center">
+                        <Bot className="h-5 w-5 text-ey-black" />
                       </div>
                       <div className="bg-gray-100 rounded-lg p-4 text-sm">
                         <div className="flex items-center gap-2">
-                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-ey-yellow border-t-transparent"></div>
                           Analyzing your Azure costs...
                         </div>
                       </div>

@@ -192,46 +192,46 @@ const AIChat: React.FC = () => {
     const lowerQuery = query.toLowerCase().trim();
     
     if (/^(hi|hello|hey|hiya|greetings?)$/.test(lowerQuery)) {
-      return "Hello! I'm your AWS Component Advisor. I can help you design cloud architectures, recommend AWS services, and estimate costs for your projects. What kind of application or system are you planning to build?";
+      return "Hello! I'm your Azure Component Advisor. I can help you design cloud architectures, recommend Azure services, and estimate costs for your projects. What kind of application or system are you planning to build?";
     }
-    
+
     if (/^(good\s+(morning|afternoon|evening|day))$/.test(lowerQuery)) {
-      return "Good day! I'm here to help you with AWS architecture recommendations and cost optimization. What project can I assist you with today?";
+      return "Good day! I'm here to help you with Azure architecture recommendations and cost optimization. What project can I assist you with today?";
     }
-    
+
     if (/^(how\s+are\s+you|how\s+do\s+you\s+do)$/.test(lowerQuery)) {
-      return "I'm doing great, thank you for asking! I'm ready to help you design efficient and cost-effective AWS solutions. What kind of system are you looking to build?";
+      return "I'm doing great, thank you for asking! I'm ready to help you design efficient and cost-effective Azure solutions. What kind of system are you looking to build?";
     }
-    
+
     if (/^(what'?s\s+up|sup)$/.test(lowerQuery)) {
-      return "Not much, just ready to help you architect some awesome AWS solutions! What project are you working on?";
+      return "Not much, just ready to help you architect some awesome Azure solutions! What project are you working on?";
     }
-    
+
     if (/^(thank\s+you|thanks|thx)$/.test(lowerQuery)) {
-      return "You're very welcome! Feel free to ask me about any AWS architecture or cost optimization questions you might have.";
+      return "You're very welcome! Feel free to ask me about any Azure architecture or cost optimization questions you might have.";
     }
-    
+
     if (/^(bye|goodbye|see\s+you|farewell)$/.test(lowerQuery)) {
-      return "Goodbye! Feel free to come back anytime you need help with AWS architecture or cost optimization. Have a great day!";
+      return "Goodbye! Feel free to come back anytime you need help with Azure architecture or cost optimization. Have a great day!";
     }
-    
+
     if (/^(help|what\s+can\s+you\s+do|what\s+are\s+your\s+capabilities)$/.test(lowerQuery)) {
-      return "I can help you with:\n\n• AWS component recommendations for your applications\n• Architecture design with pros and cons analysis\n• Cost estimation and optimization strategies\n• Implementation complexity assessment\n• Best practices for scalability and security\n\nJust describe your project requirements, and I'll provide detailed recommendations!";
+      return "I can help you with:\n\n• Azure component recommendations for your applications\n• Architecture design with pros and cons analysis\n• Cost estimation and optimization strategies\n• Implementation complexity assessment\n• Best practices for scalability and security\n\nJust describe your project requirements, and I'll provide detailed recommendations!";
     }
-    
+
     if (/^(who\s+are\s+you\??|what\s+are\s+you\??)$/.test(lowerQuery)) {
-      return "I'm your AWS Component Advisor, an AI assistant specialized in cloud architecture and cost optimization. I help you choose the right AWS services, design efficient architectures, and estimate costs for your projects.";
+      return "I'm your Azure Component Advisor, an AI assistant specialized in cloud architecture and cost optimization. I help you choose the right Azure services, design efficient architectures, and estimate costs for your projects.";
     }
-    
+
     if (/^(try\s+again|retry|again)$/.test(lowerQuery)) {
-      return "Sure! I'm ready to help. What would you like me to assist you with? You can ask me about AWS architecture, component recommendations, or cost optimization for your project.";
+      return "Sure! I'm ready to help. What would you like me to assist you with? You can ask me about Azure architecture, component recommendations, or cost optimization for your project.";
     }
-    
+
     if (/^(ok|okay|sure|yes|no)$/.test(lowerQuery)) {
-      return "Got it! How can I help you with your AWS project today? Feel free to describe what you're trying to build.";
+      return "Got it! How can I help you with your Azure project today? Feel free to describe what you're trying to build.";
     }
-    
-    return "I'm here to help you with AWS architecture recommendations and cost optimization. Could you tell me more about the application or system you're planning to build?";
+
+    return "I'm here to help you with Azure architecture recommendations and cost optimization. Could you tell me more about the application or system you're planning to build?";
   };
 
   const handleQuickQuestion = (question: string) => {
@@ -256,7 +256,7 @@ const AIChat: React.FC = () => {
           {/* Chat Interface */}
           <div className="lg:col-span-3">
             <Card className="border-0 shadow-lg h-[700px] flex flex-col">
-              <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              <CardHeader className="bg-gradient-to-r from-ey-black to-ey-black-light text-ey-yellow">
                 <div className="flex items-center gap-2">
                   <Bot className="h-5 w-5" />
                   <CardTitle className="text-lg">Azure Cost AI Advisor</CardTitle>
@@ -270,14 +270,14 @@ const AIChat: React.FC = () => {
                       <div key={message.id} className="space-y-4">
                         <div className={`flex gap-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                           {message.role === 'assistant' && (
-                            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
-                              <Bot className="h-5 w-5 text-white" />
+                            <div className="w-10 h-10 rounded-full bg-ey-yellow flex items-center justify-center flex-shrink-0">
+                              <Bot className="h-5 w-5 text-ey-black" />
                             </div>
                           )}
                           <div className={`max-w-[80%] ${message.role === 'user' ? 'order-1' : ''}`}>
                             <div className={`rounded-lg p-4 text-sm ${
                               message.role === 'user'
-                                ? 'bg-blue-500 text-white ml-auto'
+                                ? 'bg-ey-yellow text-ey-black ml-auto font-medium'
                                 : 'bg-gray-100 text-gray-800'
                             }`}>
                               <div className="flex items-start justify-between gap-2">
@@ -322,7 +322,7 @@ const AIChat: React.FC = () => {
                           <div className="bg-white border rounded-lg p-4 space-y-4 max-w-full overflow-x-auto">
                             <h4 className="font-semibold flex items-center gap-2">
                               <DollarSign className="h-4 w-4" />
-                              AWS Component Recommendations
+                              Azure Component Recommendations
                             </h4>
                             <div className="overflow-x-auto">
                               <Table className="w-full min-w-[600px]">
@@ -420,12 +420,12 @@ const AIChat: React.FC = () => {
                     
                     {isLoading && (
                       <div className="flex gap-4">
-                        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
-                          <Bot className="h-5 w-5 text-white" />
+                        <div className="w-10 h-10 rounded-full bg-ey-yellow flex items-center justify-center">
+                          <Bot className="h-5 w-5 text-ey-black" />
                         </div>
                         <div className="bg-gray-100 rounded-lg p-4 text-sm">
                           <div className="flex items-center gap-2">
-                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-ey-yellow border-t-transparent"></div>
                             Analyzing your requirements...
                           </div>
                         </div>

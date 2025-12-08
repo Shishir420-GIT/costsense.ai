@@ -127,7 +127,7 @@ const Dashboard: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Cost Analytics Dashboard</h1>
-            <p className="text-muted-foreground">Real-time AWS cost optimization insights and recommendations</p>
+            <p className="text-muted-foreground">Real-time Azure cost optimization insights and recommendations</p>
           </div>
           <div className="flex items-center gap-3">
             <Select value={timeRange} onValueChange={setTimeRange}>

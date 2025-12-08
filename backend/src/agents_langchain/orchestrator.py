@@ -30,8 +30,14 @@ class AzureCostOrchestrator:
 
         Returns list of agent names to invoke
         """
-        query_lower = query.lower()
+        query_lower = query.lower().strip()
         agents = []
+
+        # Check for greetings first
+        greetings = ['hi', 'hello', 'hey', 'good morning', 'good afternoon', 'good evening', 'greetings']
+        if query_lower in greetings or (len(query_lower.split()) <= 2 and any(g in query_lower for g in greetings)):
+            agents.append('greeting')
+            return agents
 
         # Cost-related keywords
         if any(word in query_lower for word in ['cost', 'spend', 'expense', 'price', 'bill', 'top']):
@@ -73,7 +79,24 @@ class AzureCostOrchestrator:
 
             # Call each relevant agent
             for agent_name in agent_names:
-                if agent_name == 'cost':
+                if agent_name == 'greeting':
+                    greeting_msg = """👋 Hi! I'm your Azure Cost Optimization Assistant.
+
+I can help you with:
+• **Cost Analysis** - View spending, trends, and top services
+• **Infrastructure Review** - Analyze VMs, storage, and resources
+• **Optimization Tips** - Get recommendations to reduce costs
+• **Savings Calculation** - Estimate ROI and potential savings
+
+Try asking:
+- "What is our total Azure spend?"
+- "Show me all VMs"
+- "Which resources are underutilized?"
+- "How can we save money on storage?"
+
+What would you like to know?"""
+                    results.append(greeting_msg)
+                elif agent_name == 'cost':
                     result = await cost_analyst.analyze(query)
                     results.append(f"**Cost Analysis:**\n{result}")
                 elif agent_name == 'infrastructure':
