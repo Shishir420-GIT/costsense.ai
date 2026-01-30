@@ -81,6 +81,7 @@ coverage/
 
 # Database
 *.db
+!backend/costsense.db
 *.sqlite3
 
 # Secrets

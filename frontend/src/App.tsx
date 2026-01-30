@@ -8,6 +8,8 @@ import Optimization from '@/pages/Optimization';
 import Reports from '@/pages/Reports';
 import Settings from '@/pages/Settings';
 import AIChat from '@/pages/AIChat';
+import AzureDemo from '@/pages/AzureDemo';
+import InfraPlanner from '@/pages/InfraPlanner';
 import ShadcnShowcase from '@/components/ShadcnShowcase';
 import { ThemeProvider } from '@/components/theme-provider';
 import { useAppStore } from '@/store/appStore';
@@ -40,14 +42,17 @@ function App() {
       <div className="App min-h-screen bg-background">
         <Layout>
           <Routes>
-            <Route path="/" element={<EnhancedDashboard />} />
+            <Route path="/" element={<AzureDemo />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/enhanced" element={<EnhancedDashboard />} />
             <Route path="/cost-analysis" element={<CostAnalysis />} />
             <Route path="/optimization" element={<Optimization />} />
+            <Route path="/infra-planner" element={<InfraPlanner />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/chat" element={<AIChat />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/components" element={<ShadcnShowcase />} />
+            <Route path="/demo" element={<AzureDemo />} />
           </Routes>
         </Layout>
       </div>

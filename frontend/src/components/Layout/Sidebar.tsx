@@ -1,16 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  TrendingDown, 
-  Zap, 
-  FileText, 
+import {
+  LayoutDashboard,
+  TrendingDown,
+  Zap,
+  FileText,
   Settings,
   Bot,
   DollarSign,
   BarChart3,
   ChevronLeft,
-  MessageCircle
+  MessageCircle,
+  Network
 } from 'lucide-react';
 import { useAppStore } from '@/store/appStore';
 
@@ -25,8 +26,9 @@ const navItems: NavItem[] = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/cost-analysis', icon: BarChart3, label: 'Cost Analysis' },
   { to: '/optimization', icon: Zap, label: 'Optimization', badge: 'AI' },
+  { to: '/infra-planner', icon: Network, label: 'Infra Planner', badge: 'NEW' },
   { to: '/reports', icon: FileText, label: 'Reports' },
-  { to: '/chat', icon: MessageCircle, label: 'AI Chat', badge: 'NEW' },
+  { to: '/chat', icon: MessageCircle, label: 'AI Chat' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ];
 

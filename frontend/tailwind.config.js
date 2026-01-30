@@ -23,10 +23,14 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          50: '#eff6ff',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
+          50: '#fffef0',
+          100: '#fffbd9',
+          200: '#fff7a3',
+          300: '#ffe600', // EY Yellow
+          400: '#e6cf00',
+          500: '#ccb800',
+          600: '#b3a200',
+          700: '#998b00',
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -52,6 +56,17 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // EY Brand Colors
+        'ey-yellow': {
+          DEFAULT: '#FFE600',
+          light: '#FFF7A3',
+          dark: '#CCB800',
+        },
+        'ey-black': {
+          DEFAULT: '#2E2E38',
+          light: '#4A4A54',
+          dark: '#1A1A20',
+        },
         success: {
           50: '#f0fdf4',
           500: '#10b981',
@@ -59,8 +74,8 @@ export default {
         },
         warning: {
           50: '#fffbeb',
-          500: '#f59e0b',
-          600: '#d97706',
+          500: '#FFE600', // EY Yellow for warnings
+          600: '#CCB800',
         },
         danger: {
           50: '#fef2f2',
@@ -91,5 +106,8 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/typography"),
+  ],
 }

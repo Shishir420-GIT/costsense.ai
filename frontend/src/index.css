@@ -4,62 +4,64 @@
 
 @layer base {
   :root {
+    /* EY Light Theme - Yellow & White */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 15%; /* EY Black */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 10% 15%;
+    --primary: 54 100% 50%; /* EY Yellow #FFE600 */
+    --primary-foreground: 240 10% 15%; /* Black text on yellow */
+    --secondary: 45 100% 96%; /* Light yellow tint */
+    --secondary-foreground: 240 10% 15%;
+    --muted: 45 30% 95%;
+    --muted-foreground: 240 5% 45%;
+    --accent: 54 100% 50%; /* EY Yellow for accents */
+    --accent-foreground: 240 10% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.75rem;
-    
-    /* Chart color variables */
-    --chart-1: 221.2 83.2% 53.3%;
-    --chart-2: 142.1 76.2% 36.3%;
-    --chart-3: 38.5 92.4% 50.2%;
-    --chart-4: 271.5 81.3% 55.9%;
-    --chart-5: 16.9 88.7% 63.3%;
+    --border: 45 20% 88%;
+    --input: 45 20% 88%;
+    --ring: 54 100% 50%; /* EY Yellow ring */
+    --radius: 0.5rem;
+
+    /* EY Chart colors - Yellow, Black, and complementary */
+    --chart-1: 54 100% 50%; /* EY Yellow */
+    --chart-2: 240 10% 15%; /* EY Black */
+    --chart-3: 45 95% 60%; /* Light Yellow */
+    --chart-4: 240 5% 35%; /* Medium Gray */
+    --chart-5: 54 85% 40%; /* Dark Yellow */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 84% 4.9%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.1%;
-    
-    /* Chart color variables for dark mode */
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* EY Dark Theme - Black & Yellow */
+    --background: 240 10% 10%; /* EY Dark Black */
+    --foreground: 54 100% 90%; /* Light Yellow text */
+    --card: 240 10% 12%; /* Slightly lighter black for cards */
+    --card-foreground: 54 100% 90%;
+    --popover: 240 10% 12%;
+    --popover-foreground: 54 100% 90%;
+    --primary: 54 100% 50%; /* EY Yellow */
+    --primary-foreground: 240 10% 10%; /* Black text on yellow */
+    --secondary: 240 8% 18%; /* Dark gray */
+    --secondary-foreground: 54 100% 90%;
+    --muted: 240 5% 20%;
+    --muted-foreground: 45 20% 70%;
+    --accent: 54 100% 50%; /* EY Yellow */
+    --accent-foreground: 240 10% 10%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 8% 22%;
+    --input: 240 8% 22%;
+    --ring: 54 100% 50%; /* EY Yellow ring */
+
+    /* EY Chart colors for dark mode */
+    --chart-1: 54 100% 50%; /* EY Yellow */
+    --chart-2: 54 100% 90%; /* Light Yellow */
+    --chart-3: 45 80% 60%; /* Medium Yellow */
+    --chart-4: 240 5% 60%; /* Gray */
+    --chart-5: 54 70% 40%; /* Dark Yellow */
   }
   
   * {

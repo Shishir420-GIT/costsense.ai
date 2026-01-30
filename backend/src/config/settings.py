@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     OLLAMA_MODEL: str = Field(default="llama3.2:latest", env="OLLAMA_MODEL")
     
     # Database Configuration
+    USE_DATABASE: bool = Field(default=True, env="USE_DATABASE")
+    DATABASE_URL: str = Field(default="sqlite:///./costsense.db", env="DATABASE_URL")
     POSTGRES_URL: str = Field(default="postgresql://postgres:password@localhost:5432/costoptimization", env="POSTGRES_URL")
     REDIS_URL: str = Field(default="redis://localhost:6379", env="REDIS_URL")
     

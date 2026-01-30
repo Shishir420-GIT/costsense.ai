@@ -146,7 +146,7 @@ const EnhancedDashboard: React.FC = () => {
                 Cost Intelligence Center
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-400 mt-2">
-                Advanced AWS cost optimization and infrastructure analytics
+                Advanced Azure cost optimization and infrastructure analytics
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -277,7 +277,7 @@ const EnhancedDashboard: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">Cost Analysis</h3>
-                    <p className="text-sm text-slate-600">AWS Trusted Advisor insights</p>
+                    <p className="text-sm text-slate-600">Azure Advisor insights</p>
                     <Badge variant="outline" className="mt-2">Ready</Badge>
                   </div>
                 </div>
@@ -307,7 +307,7 @@ const EnhancedDashboard: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">Component Advisor</h3>
-                    <p className="text-sm text-slate-600">AI-powered AWS recommendations</p>
+                    <p className="text-sm text-slate-600">AI-powered Azure recommendations</p>
                     <Badge variant="outline" className="mt-2">Chat Available</Badge>
                   </div>
                 </div>
@@ -639,10 +639,10 @@ const EnhancedDashboard: React.FC = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Database className="h-5 w-5" />
-                    AWS Component Advisor
+                    Azure Component Advisor
                   </CardTitle>
                   <CardDescription>
-                    Get AI-powered AWS component recommendations with pricing and architecture solutions
+                    Get AI-powered Azure component recommendations with pricing and architecture solutions
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -657,7 +657,7 @@ const EnhancedDashboard: React.FC = () => {
                               <Database className="h-4 w-4 text-white" />
                             </div>
                             <div className="bg-gray-100 rounded-lg p-3 text-sm max-w-[80%]">
-                              <p>Hi! I'm your AWS Component Advisor. Describe your application requirements and I'll recommend the best AWS components with pricing and top 2 solutions.</p>
+                              <p>Hi! I'm your Azure Component Advisor. Describe your application requirements and I'll recommend the best Azure components with pricing and top 2 solutions.</p>
                             </div>
                           </div>
                         </div>

@@ -52,7 +52,7 @@ const Header: React.FC = () => {
               CostSense AI
             </h1>
             <span className="text-sm text-gray-500">|</span>
-            <span className="text-sm text-gray-600">AWS Cost Optimization</span>
+            <span className="text-sm text-gray-600">Azure Cost Optimization</span>
           </div>
         </div>
 
