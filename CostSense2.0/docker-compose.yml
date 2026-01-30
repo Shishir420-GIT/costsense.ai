@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: costsense-postgres
+    environment:
+      POSTGRES_USER: costsense
+      POSTGRES_PASSWORD: costsense
+      POSTGRES_DB: costsense
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U costsense"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - costsense-network
+    profiles:
+      - local  # Only start with local PostgreSQL, skip if using Azure Cosmos DB
+
+  redis:
+    image: redis:7-alpine
+    container_name: costsense-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - costsense-network
+
+  ollama:
+    build:
+      context: ./infra
+      dockerfile: Dockerfile.ollama
+    container_name: costsense-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - costsense-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: costsense-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Use local PostgreSQL by default, override with .env for Azure Cosmos DB
+      - DATABASE_URL=${DATABASE_URL:-postgresql://costsense:costsense@postgres:5432/costsense}
+      - DATABASE_POOL_SIZE=${DATABASE_POOL_SIZE:-10}
+      - DATABASE_MAX_OVERFLOW=${DATABASE_MAX_OVERFLOW:-20}
+      - REDIS_URL=redis://redis:6379/0
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3.1:8b-instruct
+      - LOG_LEVEL=INFO
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:80
+    depends_on:
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - costsense-network
+    volumes:
+      - ./backend:/app
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Starting backend...' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: costsense-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - costsense-network
+
+  # Helper service to pull Ollama model on first run
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: costsense-ollama-init
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - costsense-network
+    command: >
+      sh -c "
+        echo 'Pulling llama3.1:8b-instruct model...' &&
+        ollama --host ollama:11434 pull llama3.1:8b-instruct &&
+        echo 'Model pulled successfully!'
+      "
+    restart: "no"
+
+volumes:
+  postgres_data:
+  redis_data:
+  ollama_data:
+
+networks:
+  costsense-network:
+    driver: bridge
+
+# To use Azure Cosmos DB for PostgreSQL instead of local PostgreSQL:
+# 1. Create a .env file with: DATABASE_URL=postgresql://citus:PASSWORD@c-costsense.XXXXX.postgres.cosmos.azure.com:5432/citus?sslmode=require
+# 2. Start services: docker-compose up -d
+# 3. The postgres service will be skipped automatically

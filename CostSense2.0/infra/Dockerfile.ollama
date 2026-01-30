@@ -1,0 +1,7 @@
+FROM ollama/ollama:latest
+
+# Expose Ollama port
+EXPOSE 11434
+
+# The model will be pulled on first run via docker-compose
+CMD ["serve"]
